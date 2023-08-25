@@ -31,3 +31,8 @@ class GymSerializer(serializers.ModelSerializer):
     class Meta:
         model = Gym
         fields = ['id', 'name', 'address']
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subscription
+        fields = '__all__'

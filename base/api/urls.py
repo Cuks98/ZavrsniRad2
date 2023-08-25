@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import RegisterView, LoginView, TestView, UserToGymCreateAPIView, GymView, GymListAPIView, GymRetrieveAPIView,UserGymsAPIView, GymUsersAPIView
+from .views import RegisterView, LoginView, TestView, UserToGymCreateAPIView, GymView, GymListAPIView, GymRetrieveAPIView,UserGymsAPIView, GymUsersAPIView,SubscriptionCreateAPIView,UserSubscriptionsAPIView
 
 urlpatterns=[
     path('', views.get_routs),
@@ -13,4 +13,6 @@ urlpatterns=[
     path('add-gym/', GymView.as_view()),
     path('get-gym-by-id/<int:id>/', GymRetrieveAPIView.as_view(), name='gym-detail'),
     path('get-gyms/', GymListAPIView.as_view()),
+    path('create-subscription/', SubscriptionCreateAPIView.as_view(), name='create-subscription'),
+    path('user-subscriptions/<int:user_id>/', UserSubscriptionsAPIView.as_view(), name='user-subscriptions'),
 ]

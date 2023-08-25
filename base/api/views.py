@@ -2,14 +2,15 @@ from django.http import JsonResponse
 from django.utils.encoding import smart_str
 from django.shortcuts import render
 from rest_framework.views import APIView
-from .serializers import CustomUserSerializer, UserToGymSerializer, GymSerializer
-from base.models import CustomUser, Gym, UserToGym
+from .serializers import CustomUserSerializer, UserToGymSerializer, GymSerializer, SubscriptionSerializer
+from base.models import CustomUser, Gym, UserToGym, Subscription
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework import generics
 import jwt, datetime
 from backend.settings import SECRET_KEY
 from .permissions import IsRoleAdmin, IsRoleUser, IsRoleMember
+from datetime import date
 
 
 # Create your views here.
@@ -119,6 +120,27 @@ class GymRetrieveAPIView(generics.RetrieveAPIView):
         gym_id = self.kwargs['id']
         return Gym.objects.filter(id=gym_id)
     
+class SubscriptionCreateAPIView(generics.CreateAPIView):
+    queryset = Subscription.objects.all()
+    serializer_class = SubscriptionSerializer
+
+
+class UserSubscriptionsAPIView(generics.ListAPIView):
+    serializer_class = SubscriptionSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']  # Extract user_id from URL
+        current_date = date.today()
+        subscriptions = Subscription.objects.filter(user_id=user_id, date_to__gt=current_date)
+        return subscriptions
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        if queryset.exists():
+            serializer = self.get_serializer(queryset, many=True)
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            return JsonResponse(status=404)
 
 def get_gym_by_id(request):
     pass
