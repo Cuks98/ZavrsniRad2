@@ -4,7 +4,7 @@ from base.models import CustomUser, UserToGym, Gym, Subscription, Role
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['email', 'password', 'role_id']
+        fields = ['id','email', 'password', 'role_id']
         extra_kwargs = {
             'password': {'write_only': True}
         }

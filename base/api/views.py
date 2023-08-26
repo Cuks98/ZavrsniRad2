@@ -45,7 +45,9 @@ class LoginView(APIView):
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
 
         return JsonResponse({
-            'jwt': token
+            'jwt': token,
+            'role': user.role_id,
+            'id': user.id,
         })
 
 def get_routs(request):
@@ -59,6 +61,11 @@ class TestView(APIView):
         return JsonResponse({
             'test': 'test'
         })
+
+class CustomUserRetrieveAPIView(generics.RetrieveAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    lookup_field = 'id'
 
 class UserToGymCreateAPIView(generics.CreateAPIView):
     queryset = UserToGym.objects.all()
